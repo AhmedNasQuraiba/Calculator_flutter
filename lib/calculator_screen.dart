@@ -9,6 +9,10 @@ class CalculatorScreen extends StatefulWidget {
 }
 
 class _CalculatorScreenState extends State<CalculatorScreen> {
+  String number1 = ""; // . 0-9
+  String operand = ""; // + - * /
+  String number2 = ""; // . 0-9
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -25,7 +29,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                   alignment: AlignmentDirectional.bottomEnd,
                   padding: EdgeInsets.all(16),
                   child: Text(
-                    "0000000000000000000000",
+                    "$number1$operand$number2".isEmpty
+                        ? "0"
+                        : "$number1$operand$number2",
                     style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.end,
                   ),
@@ -38,7 +44,9 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
               children: Btn.buttonValues
                   .map(
                     (value) => SizedBox(
-                      width: screenSize.width / 4,
+                      width: value == Btn.n0
+                          ? screenSize.width / 2
+                          : screenSize.width / 4,
                       height: screenSize.width / 5,
                       child: buildButton(value),
                     ),
@@ -52,16 +60,61 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Widget buildButton(value) {
-    return Material(
-      clipBehavior: Clip.hardEdge,
-      shape: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white24),
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: InkWell(
-        onTap: () {},
-        child: Center(child: Text(value)),
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: Material(
+        color: getBtnColor(value),
+        clipBehavior: Clip.hardEdge,
+        shape: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white24),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        child: InkWell(
+          onTap: () => onBtnTap(value),
+          child: Center(
+            child: Text(
+              value,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+          ),
+        ),
       ),
     );
+  }
+
+  // #####
+  void onBtnTap(String value) {
+    if (value != Btn.dot && int.tryParse(value) == null) {
+      if (operand.isNotEmpty && number2.isNotEmpty) {
+        // TO DO calculate the equation before assinging new operand
+      }
+      operand = value;
+    } else if (number1.isEmpty || operand.isEmpty) {
+      if (value == Btn.dot && number1.contains(Btn.dot)) return;
+      if (value == Btn.dot && (number1.isEmpty || number1.contains(Btn.dot)))
+        return;
+    }
+    ;
+    setState(() {
+      number1 += value;
+      operand += operand;
+      number2 += number2;
+    });
+  }
+
+  // #####
+  Color getBtnColor(value) {
+    return [Btn.del, Btn.clr].contains(value)
+        ? Colors.blueGrey
+        : ([
+                Btn.per,
+                Btn.add,
+                Btn.subtract,
+                Btn.multiply,
+                Btn.divide,
+                Btn.calculate,
+              ].contains(value)
+              ? Colors.orange
+              : Colors.black87);
   }
 }
