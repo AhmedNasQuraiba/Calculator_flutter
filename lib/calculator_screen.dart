@@ -84,6 +84,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   // #####
   void onBtnTap(String value) {
+    appendValue(value);
+  }
+
+  void appendValue(String value) {
     if (value != Btn.dot && int.tryParse(value) == null) {
       if (operand.isNotEmpty && number2.isNotEmpty) {
         // TO DO calculate the equation before assinging new operand
@@ -91,15 +95,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       operand = value;
     } else if (number1.isEmpty || operand.isEmpty) {
       if (value == Btn.dot && number1.contains(Btn.dot)) return;
-      if (value == Btn.dot && (number1.isEmpty || number1.contains(Btn.dot)))
-        return;
-    }
-    ;
-    setState(() {
+      if (value == Btn.dot && (number1.isEmpty || number1 == Btn.n0)) {
+        value = "0.";
+      }
       number1 += value;
-      operand += operand;
-      number2 += number2;
-    });
+    } else if (number2.isEmpty || operand.isNotEmpty) {
+      if (value == Btn.dot && number2.contains(Btn.dot)) return;
+      if (value == Btn.dot && (number2.isEmpty || number2 == Btn.n0)) {
+        value = "0.";
+      }
+      number2 += value;
+    }
+    setState(() {});
   }
 
   // #####
