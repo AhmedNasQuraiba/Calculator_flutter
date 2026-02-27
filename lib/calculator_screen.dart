@@ -86,9 +86,73 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void onBtnTap(String value) {
     if (value == Btn.del) {
       delete();
+      return;
+    }
+
+    if (value == Btn.clr) {
+      clearAll();
+      return;
+    }
+    if (value == Btn.per) {
+      convertToPercentage();
+      return;
+    }
+    if (value == Btn.calculate) {
+      convertToPercentage();
+      return;
     }
 
     appendValue(value);
+  }
+
+  void caclulate() {
+    if (number1.isEmpty || operand.isEmpty || number2.isEmpty) return;
+    double num1 = double.parse(number1);
+    double num2 = double.parse(number1);
+
+    double result = 0.0;
+
+    switch (operand) {
+      case Btn.add:
+        result = num1 + num2;
+        break;
+      case Btn.subtract:
+        result = num1 - num2;
+        break;
+      case Btn.multiply:
+        result = num1 * num2;
+        break;
+      case Btn.divide:
+        result = num1 / num2;
+        break;
+      default:
+    }
+
+    setState(() {
+      number1 = "$result";
+      if (number1.endsWith(".0")) {
+        number1 = number1.substring(0, number1.length - 2);
+      }
+      operand = "";
+      number2 = "";
+    });
+  }
+
+  void convertToPercentage() {
+    if (number1.isNotEmpty && operand.isNotEmpty && number2.isNotEmpty) {
+      // TO DO calculate before conversion
+    }
+
+    if (operand.isNotEmpty) {
+      return;
+    }
+
+    final number = double.parse(number1);
+    setState(() {
+      number1 = "${(number / 100)}";
+      operand = "";
+      number2 = "";
+    });
   }
 
   void delete() {
@@ -103,16 +167,20 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     setState(() {});
   }
 
+  void clearAll() {
+    setState(() {
+      number1 = "";
+      operand = "";
+      number2 = "";
+    });
+  }
+
   void appendValue(String value) {
     if (value != Btn.dot && int.tryParse(value) == null) {
       if (operand.isNotEmpty && number2.isNotEmpty) {
         // TO DO calculate the equation before assinging new operand
       }
-      print(value * 5);
-      if (number1.isNotEmpty &&
-          [Btn.add, Btn.subtract, Btn.multiply, Btn.divide].contains(value)) {
-        operand = value;
-      }
+      operand = value;
     } else if (number1.isEmpty || operand.isEmpty) {
       if (value == Btn.dot && number1.contains(Btn.dot)) return;
       if (value == Btn.dot && (number1.isEmpty || number1 == Btn.n0)) {
