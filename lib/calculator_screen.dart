@@ -140,7 +140,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void convertToPercentage() {
     if (number1.isNotEmpty && operand.isNotEmpty && number2.isNotEmpty) {
-      // TO DO calculate before conversion
+      caclulate();
     }
 
     if (operand.isNotEmpty) {
@@ -178,7 +178,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   void appendValue(String value) {
     if (value != Btn.dot && int.tryParse(value) == null) {
       if (operand.isNotEmpty && number2.isNotEmpty) {
-        // TO DO calculate the equation before assinging new operand
+        caclulate();
       }
       operand = value;
     } else if (number1.isEmpty || operand.isEmpty) {
